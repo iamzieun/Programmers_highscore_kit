@@ -10,28 +10,27 @@ def solution(genres, plays):
         answer: 베스트 앨범에 들어갈 노래의 고유 번호 리스트
         
     '''
-    answer = []
-    
-    genres_dict = dict.fromkeys(set(genres), 0)
-    
-    for g, p in zip(genres, plays):
-        genres_dict[g] += p
-    genres_list = [key for (key, value) in sorted(genres_dict.items(), key = lambda item: item[1], reverse=True)]
-    #print("genres_dict :", genres_dict)
-    #print("genres_list :", genres_list)
-
+    genres_dict = {}
     plays_dict = {}
-    for g in genres_list: 
-        plays_dict[g] = []
+
     for idx, (g, p) in enumerate(zip(genres, plays)):
-        plays_dict[g].append((idx, p))
-    for key, val in plays_dict.items():
-        plays_dict[key] = sorted(val, key = lambda item: (item[1], -item[0]), reverse=True)
+        if g not in genres_dict.keys():
+            genres_dict[g] = p
+        else:
+            genres_dict[g] += p
+
+        if g not in plays_dict.keys():
+            plays_dict[g] = [(idx, p)]
+        else:
+            plays_dict[g].append((idx, p))
     
-    for key, val in plays_dict.items():
-        answer.append(val[0][0])
-        if len(val) >= 2:
-            answer.append(val[1][0])
-    #print("plays_dict :", plays_dict)
-    #print("answer :", answer)
+    answer = []
+
+    for genres, plays in sorted(genres_dict.items(), key = lambda item: item[1], reverse=True):
+        plays_dict[genres] = sorted(plays_dict[genres], key = lambda item: (item[1], -item[0]), reverse=True)
+        if len(plays_dict[genres]) > 1:
+            answer += [plays_dict[genres][0][0], plays_dict[genres][1][0]]
+        else:
+            answer += [plays_dict[genres][0][0]]
+    
     return answer
