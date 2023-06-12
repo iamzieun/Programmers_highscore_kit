@@ -8,7 +8,7 @@ def distance(r, c, nr, nc):
     return abs(nr - r) + abs(nc - c)
 
 
-def bfs(home_r, home_c, festival_r, festival_c, n, G):
+def bfs(home_r, home_c, n, G):
     deq = deque()
     deq.append((home_r, home_c))
     visited = [0 for _ in range(n)]
@@ -16,7 +16,7 @@ def bfs(home_r, home_c, festival_r, festival_c, n, G):
     while deq:
         r, c = deq.popleft()
         
-        if distance(r, c, festival_r, festival_c) <= 1000:
+        if distance(r, c, G[-1][0], G[-1][1]) <= 1000:
             return "happy"
         
         for i in range(n):
@@ -33,9 +33,8 @@ def main():
     for _ in range(t):
         n = int(stdin.readline())
         home_r, home_c = map(int, stdin.readline().split())
-        G = [list(map(int, stdin.readline().split())) for _ in range(n)]
-        festival_r, festival_c = map(int, stdin.readline().split())
-        print(bfs(home_r, home_c, festival_r, festival_c, n, G))
+        G = [list(map(int, stdin.readline().split())) for _ in range(n + 1)]
+        print(bfs(home_r, home_c, n, G))
 
 
 if __name__ == '__main__':
